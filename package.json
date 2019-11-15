@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "webpack-dev-server -d",
-    "build": "webpack --mode production # && platformio run",
+    "build": "webpack --mode production && platformio run",
     "lint": "echo TODO",
     "deploy": "webpack --mode production && platformio run --target upload"
   },

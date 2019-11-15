@@ -2,5 +2,6 @@
 *.log
 
 # Ignore builds
-node_modules/
+.pio/
 dist/
+node_modules/
