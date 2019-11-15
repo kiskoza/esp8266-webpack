@@ -2,7 +2,7 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 
-#include "secrets.h"
+#include "../dist/secrets.h"
 #include "../dist/index.html.h"
 
 const char* ssid = STASSID;
