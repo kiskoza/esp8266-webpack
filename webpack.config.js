@@ -1,6 +1,27 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
+class CppHeaderTransformPlugin {
+  apply(compiler) {
+    compiler.hooks.emit.tapAsync('CppHeaderTransformPlugin', (compilation, callback) => {
+      var cpp_header = 'const char* html = "';
+      cpp_header += compilation.assets['index.html'].source().toString().replace(/"/g, '\\"');
+      cpp_header += '";';
+
+      compilation.assets['index.html.h'] = {
+        source: function() {
+          return cpp_header;
+        },
+        size: function() {
+          return cpp_header.length;
+        }
+      };
+
+      callback();
+    });
+  }
+}
+
 module.exports = (env, args) => {
   return {
     mode: args.mode,
@@ -19,6 +40,7 @@ module.exports = (env, args) => {
           removeStyleLinkTypeAttributes: true
         } : null,
       }),
+      new CppHeaderTransformPlugin(),
     ]
   };
 }
