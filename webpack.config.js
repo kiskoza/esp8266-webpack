@@ -1,6 +1,8 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
+var dotenv = require('dotenv').config({path: __dirname + '/.env'});
+
 class CppHeaderTransformPlugin {
   apply(compiler) {
     compiler.hooks.emit.tapAsync('CppHeaderTransformPlugin', (compilation, callback) => {
@@ -16,6 +18,19 @@ class CppHeaderTransformPlugin {
           return cpp_header.length;
         }
       };
+
+      var secrets = '';
+      secrets += '#define STASSID "' + dotenv.parsed.SSID + '"\n';
+      secrets += '#define STAPSK  "' + dotenv.parsed.PASSWORD + '"\n'
+
+      compilation.assets['secrets.h'] = {
+        source: function() {
+          return secrets;
+        },
+        size: function() {
+          return secrets.length;
+        }
+      }
 
       callback();
     });

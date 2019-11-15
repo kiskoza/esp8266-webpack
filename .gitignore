@@ -1,3 +1,6 @@
+# Ignore sensitive data
+.env
+
 # Ignore logs
 *.log
 

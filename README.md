@@ -15,14 +15,21 @@ asdf install
 npm install yarn -g
 ```
 
-### Installing
-
-First we need all the dependencies
+We need to install required packages
 
 ```
 pip install -r requirements.txt
 yarn install
 ```
+
+And configure the environment variables
+
+```
+cp .env.example .env
+nano .env
+```
+
+### Running
 
 Then we could run a dev-server for the web
 
@@ -48,7 +55,7 @@ yarn run lint
 
 ## Deployment
 
-Plug in the ESP module and
+Plug in the ESP module and:
 
 ```
 yarn run deploy
