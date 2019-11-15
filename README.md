@@ -1,6 +1,6 @@
 # ESP8266 Webpack Template
 
-If it work, it ain't stupid
+If it works, it ain't stupid
 
 ## Getting Started
 
