@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= htmlWebpackPlugin.options.title %></title>
+  <!-- Keep this script tag to include javascript -->
+  <script type="text/javascript">
+    <%= htmlWebpackPlugin.files.js.map(function(jsFile){
+      return compilation.assets[jsFile.substr(htmlWebpackPlugin.files.publicPath.length)].source();
+    }) %>
+  </script>
+</head>
+<body>
+  <!-- Add content here -->
+   <p>Hello</p>
+</body>
+</html>
