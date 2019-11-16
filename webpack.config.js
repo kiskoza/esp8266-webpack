@@ -12,11 +12,11 @@ class CppHeaderTransformPlugin {
       Object.keys(compilation.assets)
         .filter((file) => file.endsWith('.html'))
         .map((file) => {
-          var cpp_header = 'const char* ';
-          cpp_header += file.replace(/\./g, '_');
-          cpp_header += ' = "';
+          var cpp_header = '#define ';
+          cpp_header += file.replace(/\./g, '_').toUpperCase();
+          cpp_header += ' "';
           cpp_header += compilation.assets[file].source().toString().replace(/"/g, '\\"');
-          cpp_header += '";';
+          cpp_header += '"';
 
           compilation.assets[file + '.h'] = {
             source: function() {

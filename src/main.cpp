@@ -8,6 +8,8 @@
 const char* ssid = STASSID;
 const char* password = STAPSK;
 
+const char* index_html = INDEX_HTML;
+
 ESP8266WebServer server(80);
 
 const int led = D0;
