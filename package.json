@@ -1,7 +1,7 @@
 {
   "author": "Koza <kiskoza@gmail.com>",
   "name": "esp8266-webpack",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "scripts": {
     "dev": "webpack-dev-server -d",
     "build": "webpack --mode production && platformio run",
