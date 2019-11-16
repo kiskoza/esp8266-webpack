@@ -10,7 +10,7 @@ class CppHeaderTransformPlugin {
       var main_header = '';
 
       Object.keys(compilation.assets)
-        .filter((file) => file.endsWith('.html'))
+        .filter((file) => file.endsWith('.html') || file.endsWith('.js'))
         .map((file) => {
           var cpp_header = '#define ';
           cpp_header += file.replace(/\./g, '_').toUpperCase();

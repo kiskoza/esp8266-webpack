@@ -9,6 +9,7 @@ const char* ssid = STASSID;
 const char* password = STAPSK;
 
 const char* index_html = INDEX_HTML;
+const char* main_js = MAIN_JS;
 
 ESP8266WebServer server(80);
 
@@ -17,6 +18,13 @@ const int led = D0;
 void handleRoot() {
   digitalWrite(led, 1);
   server.send(200, "text/html", index_html);
+  delay(500);
+  digitalWrite(led, 0);
+}
+
+void handleJS() {
+  digitalWrite(led, 1);
+  server.send(200, "text/javascript", main_js);
   delay(500);
   digitalWrite(led, 0);
 }
@@ -58,6 +66,7 @@ void setup(void) {
   Serial.println(WiFi.localIP());
 
   server.on("/", handleRoot);
+  server.on("/main.js", handleJS);
 
   server.onNotFound(handleNotFound);
 
