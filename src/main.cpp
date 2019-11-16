@@ -3,7 +3,7 @@
 #include <ESP8266WebServer.h>
 
 #include "../dist/secrets.h"
-#include "../dist/index.html.h"
+#include "../dist/html.h"
 
 const char* ssid = STASSID;
 const char* password = STAPSK;
@@ -14,7 +14,7 @@ const int led = D0;
 
 void handleRoot() {
   digitalWrite(led, 1);
-  server.send(200, "text/html", html);
+  server.send(200, "text/html", index_html);
   delay(500);
   digitalWrite(led, 0);
 }
