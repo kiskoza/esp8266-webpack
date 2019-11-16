@@ -81,6 +81,18 @@ module.exports = (env, args) => {
               });
             }),
       new CppHeaderTransformPlugin(),
-    ]
+    ],
+    devServer: {
+      historyApiFallback: {
+        rewrites: [
+          {
+            from: /[^.].*$/,
+            to: function(context) {
+              return context.parsedUrl.pathname + '.html';
+            }
+          }
+        ]
+      }
+    }
   };
 }
