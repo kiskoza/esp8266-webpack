@@ -12,13 +12,15 @@ class CppHeaderTransformPlugin {
       Object.keys(compilation.assets)
         .filter((file) => file.endsWith('.html') || file.endsWith('.js'))
         .map((file) => {
+          var h_file = file.split('/')[1] || file;
+
           var cpp_header = '#define ';
-          cpp_header += file.replace(/\./g, '_').toUpperCase();
+          cpp_header += h_file.replace(/\./g, '_').toUpperCase();
           cpp_header += ' "';
           cpp_header += compilation.assets[file].source().toString().replace(/"/g, '\\"');
           cpp_header += '"';
 
-          compilation.assets[file + '.h'] = {
+          compilation.assets[h_file + '.h'] = {
             source: function() {
               return cpp_header;
             },
@@ -27,7 +29,7 @@ class CppHeaderTransformPlugin {
             }
           };
 
-          main_header += '#include "' + file + '.h"\n';
+          main_header += '#include "' + h_file + '.h"\n';
         });
 
       compilation.assets['html.h'] = {
@@ -61,6 +63,9 @@ module.exports = (env, args) => {
   return {
     mode: args.mode,
     entry: './web/index.js',
+    output: {
+      filename: 'data/main.js',
+    },
     plugins: [
       ...fs.readdirSync('./web/')
            .filter((file) => file.endsWith('.html'))
@@ -69,7 +74,7 @@ module.exports = (env, args) => {
                 title: 'ESP8266 Web Interface',
                 inject: false,
                 template: './web/' + file,
-                filename: file,
+                filename: 'data/' + file,
                 minify: args.mode === 'production' ? {
                   collapseBooleanAttributes: true,
                   collapseWhitespace: true,
@@ -88,7 +93,13 @@ module.exports = (env, args) => {
           {
             from: /[^.].*$/,
             to: function(context) {
-              return context.parsedUrl.pathname + '.html';
+              if(context.parsedUrl.pathname == '/') {
+                return '/data/index.html'
+              } else if(context.parsedUrl.pathname.split('.').length == 1) {
+                return '/data/' + context.parsedUrl.pathname + '.html';
+              } else {
+                return '/data/' + context.parsedUrl.pathname;
+              }
             }
           }
         ]

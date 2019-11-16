@@ -5,7 +5,7 @@
   <title><%= htmlWebpackPlugin.options.title %></title>
   <!-- Keep this script tag to include javascript -->
   <% for (var jsFile in htmlWebpackPlugin.files.js) { %>
-    <script src="<%= htmlWebpackPlugin.files.js[jsFile] %>"></script>
+    <script src="<%= htmlWebpackPlugin.files.js[jsFile].split('/')[2] %>"></script>
   <% } %>
 </head>
 <body>
