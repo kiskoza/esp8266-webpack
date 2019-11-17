@@ -1,15 +1,14 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
+#include <FS.h>
 
+#include "template_page.h"
 #include "../dist/secrets.h"
 #include "../dist/html.h"
 
 const char* ssid = STASSID;
 const char* password = STAPSK;
-
-const char* index_html = INDEX_HTML;
-const char* main_js = MAIN_JS;
 
 ESP8266WebServer server(80);
 
@@ -17,32 +16,31 @@ const int led = D0;
 
 void handleRoot() {
   digitalWrite(led, 1);
-  server.send(200, "text/html", index_html);
+  String msg = "Hello from ASP";
+  IndexHtml page = IndexHtml(msg);
+  server.send(200, "text/html", page.render());
   delay(500);
   digitalWrite(led, 0);
 }
 
 void handleJS() {
   digitalWrite(led, 1);
-  server.send(200, "text/javascript", main_js);
+  MainJs page = MainJs();
+  server.send(200, "text/javascript", page.render());
   delay(500);
   digitalWrite(led, 0);
 }
 
 void handleNotFound() {
   digitalWrite(led, 1);
-  String message = "File Not Found\n\n";
-  message += "URI: ";
-  message += server.uri();
-  message += "\nMethod: ";
-  message += (server.method() == HTTP_GET) ? "GET" : "POST";
-  message += "\nArguments: ";
-  message += server.args();
-  message += "\n";
+  String args = "";
   for (uint8_t i = 0; i < server.args(); i++) {
-    message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
+    args += " " + server.argName(i) + ": " + server.arg(i) + "\n";
   }
-  server.send(404, "text/plain", message);
+  String method = (server.method() == HTTP_GET) ? "GET" : "POST";
+  String uri = server.uri();
+  ErrorHtml page = ErrorHtml(args, method, uri);
+  server.send(404, "text/html", page.render());
   digitalWrite(led, 0);
 }
 
@@ -64,6 +62,8 @@ void setup(void) {
   Serial.println(ssid);
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
+
+  SPIFFS.begin();
 
   server.on("/", handleRoot);
   server.on("/main.js", handleJS);

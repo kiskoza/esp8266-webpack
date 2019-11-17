@@ -3,12 +3,13 @@
   "name": "esp8266-webpack",
   "version": "1.1.0",
   "scripts": {
-    "dev": "webpack-dev-server -d",
+    "dev": "webpack-dev-server -d --open",
     "build": "rimraf dist && webpack --mode production && platformio run",
     "lint": "echo TODO",
-    "deploy": "rimraf dist && webpack --mode production && platformio run --target upload"
+    "deploy": "rimraf dist && webpack --mode production && platformio run --target upload && platformio run --target uploadfs"
   },
   "dependencies": {
+    "change-case": "^3.1.0",
     "dotenv": "^8.2.0",
     "html-webpack-plugin": "^3.2.0",
     "rimraf": "^3.0.0",

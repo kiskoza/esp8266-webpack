@@ -5,6 +5,7 @@
 *.log
 
 # Ignore builds
+*.gch
 .pio/
 dist/
 node_modules/

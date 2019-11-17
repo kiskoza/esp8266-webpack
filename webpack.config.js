@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const fs = require('fs');
+const changeCase = require('change-case');
 
 var dotenv = require('dotenv').config({path: __dirname + '/.env'});
 
@@ -14,11 +15,50 @@ class CppHeaderTransformPlugin {
         .map((file) => {
           var h_file = file.split('/')[1] || file;
 
-          var cpp_header = '#define ';
-          cpp_header += h_file.replace(/\./g, '_').toUpperCase();
-          cpp_header += ' "';
-          cpp_header += compilation.assets[file].source().toString().replace(/"/g, '\\"');
-          cpp_header += '"';
+          const guardName = h_file.replace(/\./g, '_').toUpperCase();
+          const className = changeCase.pascal(h_file);
+
+          const keys = (compilation.assets[file].source().toString()
+            .match(/%[A-Z]*%/g) || [])
+            .map((el) => { return el.replace(/%/g, '') })
+            .filter((v, i, a) => { return a.indexOf(v) === i })
+            .sort();
+
+          var cpp_header = '';
+          cpp_header += '#ifndef ' + guardName + '_H\n';
+          cpp_header += '#define ' + guardName + '_H\n';
+          cpp_header += '\n';
+          cpp_header += '#include "template_page.h"\n';
+          cpp_header += '\n';
+          cpp_header += 'class ' + className +' : public TemplatePage {\n'
+          keys.map((key) => {
+            cpp_header += '  String& ' + key.toLowerCase() + ';\n';
+          });
+          cpp_header += 'public:\n';
+          cpp_header += '  ' + className + '('
+          cpp_header += keys.map((key) => {
+                              return 'String& _' + key.toLowerCase();
+                            }).join(', ');
+          cpp_header += ') :\n';
+          cpp_header += '    TemplatePage("/' + h_file + '")';
+          keys.map((key) => {
+            cpp_header += ',\n    ' + key.toLowerCase() + '(_' + key.toLowerCase() + ')'
+          });
+          cpp_header += ' {}\n';
+          cpp_header += '\n';
+          cpp_header += '  String& params(const String& param) {\n    ';
+          keys.map((key) => {
+            cpp_header += 'if(param == "' + key + '") {\n';
+            cpp_header += '      return ' + key.toLowerCase() + ';\n';
+            cpp_header += '    } else ';
+          });
+          cpp_header += '{\n';
+          cpp_header += '      return empty;\n';
+          cpp_header += '    }\n';
+          cpp_header += '  }\n';
+          cpp_header += '};\n';
+          cpp_header += '\n';
+          cpp_header += '#endif\n';
 
           compilation.assets[h_file + '.h'] = {
             source: function() {
