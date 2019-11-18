@@ -3,10 +3,10 @@
   "name": "esp8266-webpack",
   "version": "1.1.0",
   "scripts": {
-    "dev": "webpack-dev-server -d --open",
+    "dev": "rimraf dist && webpack-dev-server -d --open",
     "build": "rimraf dist && webpack --mode production && platformio run",
     "lint": "echo TODO",
-    "deploy": "rimraf dist && webpack --mode production && platformio run --target upload && platformio run --target uploadfs"
+    "deploy": "rimraf dist && webpack --mode production && platformio run --target upload && platformio run --target uploadfs && platformio device monitor"
   },
   "dependencies": {
     "change-case": "^3.1.0",
