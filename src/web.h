@@ -4,7 +4,7 @@
 #include <ESP8266WebServer.h>
 #include <FS.h>
 
-#include "template_page.h"
+#include "../lib/template_page.h"
 #include "../dist/html.h"
 
 extern ESP8266WebServer server;
