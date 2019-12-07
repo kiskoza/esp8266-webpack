@@ -7,9 +7,12 @@ const { CppHeaderTransformPlugin } = require('./lib/cpp_header_transform_plugin.
 module.exports = (env, args) => {
   return {
     mode: args.mode,
-    entry: './web/index.js',
+    entry: {
+      ...(args.mode == "development" && { "service-worker": './lib/service-worker.js' }),
+      main: './web/index.js',
+    },
     output: {
-      filename: 'data/main.js',
+      filename: 'data/[name].js',
     },
     plugins: [
       ...fs.readdirSync('./web/')
