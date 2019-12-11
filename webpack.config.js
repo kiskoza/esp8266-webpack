@@ -8,8 +8,9 @@ module.exports = (env, args) => {
   return {
     mode: args.mode,
     entry: {
-      ...(args.mode == "development" && { "service-worker": './lib/service-worker.js' }),
-      main: './web/index.js',
+      ...(args.mode == "development" && { "service-worker": './lib/dev-server/service-worker.js' }),
+      ...(args.mode == "development" && { "state-mock": './lib/dev-server/state-mock.js' }),
+      main: './web/main.js',
     },
     output: {
       filename: 'data/[name].js',
@@ -33,6 +34,13 @@ module.exports = (env, args) => {
                 } : null,
               });
             }),
+      ...(args.mode == "development" ? [
+            new HtmlWebpackPlugin({
+              inject: false,
+              template: './lib/dev-server/dev-server.html',
+              filename: 'data/dev-server.html',
+              minify: null,
+            })] : []),
       new CppHeaderTransformPlugin(),
     ],
     devServer: {
